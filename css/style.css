@@ -1,0 +1,38 @@
+body {
+    font-family: Arial;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 30px;
+}
+
+.container {
+    width: 800px;
+    margin: auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.nilai {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.soal {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.btn {
+    display: block;
+    width: 150px;
+    margin: 30px auto 0;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+}
