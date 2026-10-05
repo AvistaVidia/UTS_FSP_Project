@@ -9,7 +9,12 @@ $objJawaban = new Jawaban();
 
 $halamanTerakhir = $objSoal->getMaxHalaman();
 
-$halaman = $_SESSION['halaman'] ?? 1;
+if (isset($_SESSION['halaman'])) {
+    $halaman = $_SESSION['halaman'];
+} else {
+    $halaman = 1;
+}
+
 if (!isset($_SESSION['jawaban'])) {
     $_SESSION['jawaban'] = array();
 }
@@ -18,12 +23,18 @@ if (!isset($_SESSION['benar'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $aksi = $_POST['aksi'] ?? "";
-    $pilihan = $_POST['jawaban'] ?? array();
+    $aksi = "";
+    if (isset($_POST['aksi'])) {
+        $aksi = $_POST['aksi'];
+    }
+
+    $pilihan = array();
+    if (isset($_POST['jawaban'])) {
+        $pilihan = $_POST['jawaban'];
+    }
 
     foreach ($pilihan as $idsoal => $idjawaban) {
         $data = $objJawaban->getJawabanById($idjawaban);
-
         if ($data && $data['idsoal'] == $idsoal) {
             $_SESSION['jawaban'][$idsoal] = $idjawaban;
             $_SESSION['benar'][$idsoal] = ($data['benarkah'] == 1);
@@ -69,34 +80,37 @@ $daftarSoal = $objSoal->getSoalByHalaman($halaman);
         <h2>Halaman <?php echo $halaman; ?> dari <?php echo $halamanTerakhir; ?></h2>
 
         <form method="POST" action="index.php">
-            <?php foreach ($daftarSoal as $s): ?>
-                <div class="soal">
-                    <h3>Soal <?php echo $s['nomor']; ?></h3>
-                    <p><?php echo htmlentities($s['pertanyaan']); ?></p>
+<?php
+foreach ($daftarSoal as $s) {
+    echo "<div class='soal'>";
+    echo "<h3>Soal " . $s['nomor'] . "</h3>";
+    echo "<p>" . htmlentities($s['pertanyaan']) . "</p>";
 
-                    <?php
-                    $daftarJawaban = $objJawaban->getJawabanBySoal($s['idsoal']);
-                    foreach ($daftarJawaban as $j):
-                        $checked = "";
-                        if (isset($_SESSION['jawaban'][$s['idsoal']]) && $_SESSION['jawaban'][$s['idsoal']] == $j['idjawaban']) {
-                            $checked = "checked";
-                        }
-                    ?>
-                        <label class="opsi">
-                            <input type="radio"
-                                   name="jawaban[<?php echo $s['idsoal']; ?>]"
-                                   value="<?php echo $j['idjawaban']; ?>"
-                                   <?php echo $checked; ?> required>
-                            <?php echo htmlentities($j['isi_jawaban']); ?>
-                        </label>
-                    <?php endforeach; ?>
-                </div>
-            <?php endforeach; ?>
+    $daftarJawaban = $objJawaban->getJawabanBySoal($s['idsoal']);
+    foreach ($daftarJawaban as $j) {
+        $checked = "";
+        if (isset($_SESSION['jawaban'][$s['idsoal']])) {
+            if ($_SESSION['jawaban'][$s['idsoal']] == $j['idjawaban']) {
+                $checked = "checked";
+            }
+        }
+
+        echo "<label class='opsi'>";
+        echo "<input type='radio' name='jawaban[" . $s['idsoal'] . "]' value='" . $j['idjawaban'] . "' " . $checked . " required> ";
+        echo htmlentities($j['isi_jawaban']);
+        echo "</label>";
+    }
+
+    echo "</div>";
+}
+?>
 
             <div class="navigasi">
-                <?php if ($halaman > 1): ?>
-                    <button type="submit" name="aksi" value="previous" formnovalidate>Previous</button>
-                <?php endif; ?>
+<?php
+if ($halaman > 1) {
+    echo "<button type='submit' name='aksi' value='previous' formnovalidate>Previous</button>";
+}
+?>
                 <button type="submit" name="aksi" value="next" class="kanan">Next</button>
             </div>
         </form>
