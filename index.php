@@ -1,0 +1,105 @@
+<?php
+session_start();
+
+require_once 'soal.php';
+require_once 'jawaban.php';
+
+$objSoal = new soal();
+$objJawaban = new Jawaban();
+
+$halamanTerakhir = $objSoal->getMaxHalaman();
+
+$halaman = $_SESSION['halaman'] ?? 1;
+if (!isset($_SESSION['jawaban'])) {
+    $_SESSION['jawaban'] = array();
+}
+if (!isset($_SESSION['benar'])) {
+    $_SESSION['benar'] = array();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $aksi = $_POST['aksi'] ?? "";
+    $pilihan = $_POST['jawaban'] ?? array();
+
+    foreach ($pilihan as $idsoal => $idjawaban) {
+        $data = $objJawaban->getJawabanById($idjawaban);
+
+        if ($data && $data['idsoal'] == $idsoal) {
+            $_SESSION['jawaban'][$idsoal] = $idjawaban;
+            $_SESSION['benar'][$idsoal] = ($data['benarkah'] == 1);
+        }
+    }
+
+    if ($aksi == "next") {
+        if ($halaman >= $halamanTerakhir) {
+            header("location: kesimpulan.php");
+            exit();
+        }
+        $_SESSION['halaman'] = $halaman + 1;
+    } else if ($aksi == "previous") {
+        if ($halaman > 1) {
+            $_SESSION['halaman'] = $halaman - 1;
+        }
+    }
+
+    header("location: index.php");
+    exit();
+}
+
+if (!is_numeric($halaman) || $halaman < 1) {
+    $halaman = 1;
+}
+if ($halaman > $halamanTerakhir) {
+    $halaman = $halamanTerakhir;
+}
+
+$daftarSoal = $objSoal->getSoalByHalaman($halaman);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis - Halaman <?php echo $halaman; ?></title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Halaman <?php echo $halaman; ?> dari <?php echo $halamanTerakhir; ?></h2>
+
+        <form method="POST" action="index.php">
+            <?php foreach ($daftarSoal as $s): ?>
+                <div class="soal">
+                    <h3>Soal <?php echo $s['nomor']; ?></h3>
+                    <p><?php echo htmlentities($s['pertanyaan']); ?></p>
+
+                    <?php
+                    $daftarJawaban = $objJawaban->getJawabanBySoal($s['idsoal']);
+                    foreach ($daftarJawaban as $j):
+                        $checked = "";
+                        if (isset($_SESSION['jawaban'][$s['idsoal']]) && $_SESSION['jawaban'][$s['idsoal']] == $j['idjawaban']) {
+                            $checked = "checked";
+                        }
+                    ?>
+                        <label class="opsi">
+                            <input type="radio"
+                                   name="jawaban[<?php echo $s['idsoal']; ?>]"
+                                   value="<?php echo $j['idjawaban']; ?>"
+                                   <?php echo $checked; ?> required>
+                            <?php echo htmlentities($j['isi_jawaban']); ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+
+            <div class="navigasi">
+                <?php if ($halaman > 1): ?>
+                    <button type="submit" name="aksi" value="previous" formnovalidate>Previous</button>
+                <?php endif; ?>
+                <button type="submit" name="aksi" value="next" class="kanan">Next</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
