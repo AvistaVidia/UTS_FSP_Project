@@ -4,7 +4,7 @@ session_start();
 require_once 'soal.php';
 require_once 'jawaban.php';
 
-$objSoal = new soal();
+$objSoal = new Soal();
 $objJawaban = new Jawaban();
 
 $halamanTerakhir = $objSoal->getMaxHalaman();

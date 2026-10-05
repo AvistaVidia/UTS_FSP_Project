@@ -1,7 +1,7 @@
 <?php
 require_once 'connection.php';
 
-class soal
+class Soal
 {
     private $db;
 
