@@ -39,4 +39,18 @@ class Soal
 
         return $data;
     }
+
+    public function getMaxHalaman(){
+        $stmt = $this->db->prepare("SELECT MAX(halaman_ke) AS max_halaman FROM soal");
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $data = $res->fetch_assoc();
+
+        if(isset($data['max_halaman'])) {
+            return $data['max_halaman'];
+        } 
+        else {
+            return 1;
+        }
+    }
 }

@@ -69,51 +69,54 @@ $daftarSoal = $objSoal->getSoalByHalaman($halaman);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kuis - Halaman <?php echo $halaman; ?></title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <div class="container">
         <h2>Halaman <?php echo $halaman; ?> dari <?php echo $halamanTerakhir; ?></h2>
 
         <form method="POST" action="index.php">
-<?php
-foreach ($daftarSoal as $s) {
-    echo "<div class='soal'>";
-    echo "<h3>Soal " . $s['nomor'] . "</h3>";
-    echo "<p>" . htmlentities($s['pertanyaan']) . "</p>";
+            <?php
+            foreach ($daftarSoal as $s) {
+                echo "<div class='soal'>";
+                echo "<h3>Soal " . $s['nomor'] . "</h3>";
+                echo "<p>" . htmlentities($s['pertanyaan']) . "</p>";
 
-    $daftarJawaban = $objJawaban->getJawabanBySoal($s['idsoal']);
-    foreach ($daftarJawaban as $j) {
-        $checked = "";
-        if (isset($_SESSION['jawaban'][$s['idsoal']])) {
-            if ($_SESSION['jawaban'][$s['idsoal']] == $j['idjawaban']) {
-                $checked = "checked";
+                $daftarJawaban = $objJawaban->getJawabanBySoal($s['idsoal']);
+                foreach ($daftarJawaban as $j) {
+                    $checked = "";
+                    if (isset($_SESSION['jawaban'][$s['idsoal']])) {
+                        if ($_SESSION['jawaban'][$s['idsoal']] == $j['idjawaban']) {
+                            $checked = "checked";
+                        }
+                    }
+
+                    echo "<label class='opsi'>";
+                    echo "<input type='radio' name='jawaban[" . $s['idsoal'] . "]' value='" . $j['idjawaban'] . "' " . $checked . " required> ";
+                    echo htmlentities($j['isi_jawaban']);
+                    echo "</label>";
+                }
+
+                echo "</div>";
             }
-        }
-
-        echo "<label class='opsi'>";
-        echo "<input type='radio' name='jawaban[" . $s['idsoal'] . "]' value='" . $j['idjawaban'] . "' " . $checked . " required> ";
-        echo htmlentities($j['isi_jawaban']);
-        echo "</label>";
-    }
-
-    echo "</div>";
-}
-?>
+            ?>
 
             <div class="navigasi">
-<?php
-if ($halaman > 1) {
-    echo "<button type='submit' name='aksi' value='previous' formnovalidate>Previous</button>";
-}
-?>
+                <?php
+                if ($halaman > 1) {
+                    echo "<button type='submit' name='aksi' value='previous' formnovalidate>Previous</button>";
+                }
+                ?>
                 <button type="submit" name="aksi" value="next" class="kanan">Next</button>
             </div>
         </form>
     </div>
 </body>
+
 </html>
