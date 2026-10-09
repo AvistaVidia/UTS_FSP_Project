@@ -4,7 +4,7 @@ session_start();
 require_once 'soal.php';
 require_once 'jawaban.php';
 
-$objSoal = new soal();
+$objSoal = new Soal();
 $objJawaban = new Jawaban();
 
 $daftarSoal = $objSoal->selectAllSoal();
@@ -65,6 +65,14 @@ $nilai = $jumlahBenar * 10;
                 <p><?php echo htmlentities($s['pertanyaan']); ?></p>
                 <p>Jawaban:<b><?php echo htmlentities($teksJawaban); ?></b></p>
                 <p>Status:<b><?php echo $status; ?></b></p>
+                <?php
+                if ($status == "Salah") {
+                    $dataBenar = $objJawaban->getJawabanBenar($idsoal);
+                    if ($dataBenar) {
+                        echo "<p>Jawaban benar: <b>" . htmlentities($dataBenar['isi_jawaban']) . "</b></p>";
+                    }
+                }
+                ?>
             </div>
             <?php
             }
@@ -75,7 +83,7 @@ $nilai = $jumlahBenar * 10;
             <h1>Skor Akhir: <?php echo $nilai; ?></h1>
         </div>
 
-        <a href="playagain.php" class="btn">Main Lagi</a>
+        <a href="playagain.php" class="btn">PLAY AGAIN</a>
     </div>
 </body>
 </html>

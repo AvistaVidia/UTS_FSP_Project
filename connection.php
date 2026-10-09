@@ -1,13 +1,18 @@
 <?php
-    $host = "localhost";
-    $user = "root";
-    $password = "";
-    $db = "fullstack";
-    
-    $mysqli = new mysqli($host,$user,$password,$db);
+class Koneksi {
+    protected $mysqli;
 
-    if($mysqli->connect_errno) {
-        die ("Failed to connect to MySQL :". $mysqli->connect_errno);
+    public function __construct() {
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $db = "fullstack";
+
+        $this->mysqli = new mysqli($host, $user, $password, $db);
+
+        if ($this->mysqli->connect_errno) {
+            die("Failed to connect to MySQL: " . $this->mysqli->connect_error);
+        }
     }
-
+}
 ?>

@@ -22,11 +22,8 @@ if (!isset($_SESSION['benar'])) {
     $_SESSION['benar'] = array();
 }
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $aksi = "";
-    if (isset($_POST['aksi'])) {
-        $aksi = $_POST['aksi'];
-    }
+if (isset($_POST['aksi'])) {
+    $aksi = $_POST['aksi'];
 
     $pilihan = array();
     if (isset($_POST['jawaban'])) {
@@ -98,7 +95,7 @@ $daftarSoal = $objSoal->getSoalByHalaman($halaman);
                     }
 
                     echo "<label class='opsi'>";
-                    echo "<input type='radio' name='jawaban[" . $s['idsoal'] . "]' value='" . $j['idjawaban'] . "' " . $checked . " required> ";
+                    echo "<input type='radio' name='jawaban[" . $s['idsoal'] . "]' value='" . $j['idjawaban'] . "' " . $checked . ">";
                     echo htmlentities($j['isi_jawaban']);
                     echo "</label>";
                 }
@@ -110,7 +107,7 @@ $daftarSoal = $objSoal->getSoalByHalaman($halaman);
             <div class="navigasi">
                 <?php
                 if ($halaman > 1) {
-                    echo "<button type='submit' name='aksi' value='previous' formnovalidate>Previous</button>";
+                    echo "<button type='submit' name='aksi' value='previous'>Previous</button>";
                 }
                 ?>
                 <button type="submit" name="aksi" value="next" class="kanan">Next</button>

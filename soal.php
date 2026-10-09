@@ -1,22 +1,18 @@
 <?php
 require_once 'connection.php';
 
-class Soal
-{
-    private $db;
-
+class Soal extends Koneksi {
     public function __construct()
     {
-        require 'connection.php';
-        $this->db = $mysqli;
+        parent::__construct();
     }
 
     public function selectAllSoal() { //dipake buat halaman kesimpulan nentuin skor
-        $stmt = $this->db->prepare("SELECT * FROM soal");
+        $stmt = $this->mysqli->prepare("SELECT * FROM soal ORDER BY halaman_ke ASC, nomor ASC");
         $stmt->execute();
         $res = $stmt->get_result();
         
-        $data = [];
+        $data = array();
         
         while ($row = $res->fetch_assoc()) {
             $data[] = $row;
@@ -27,12 +23,12 @@ class Soal
 
     public function getSoalByHalaman($halaman) //menampilkan soal berdasarkan halaman_ke
     {
-        $stmt = $this->db->prepare("SELECT * FROM soal WHERE halaman_ke = ? ORDER BY nomor ASC");
+        $stmt = $this->mysqli->prepare("SELECT * FROM soal WHERE halaman_ke = ? ORDER BY nomor ASC");
         $stmt->bind_param("i", $halaman);
         $stmt->execute();
         $res = $stmt->get_result();
 
-        $data = [];
+        $data = array();
         while ($row = $res->fetch_assoc()) {
             $data[] = $row;
         }
@@ -41,7 +37,7 @@ class Soal
     }
 
     public function getMaxHalaman(){
-        $stmt = $this->db->prepare("SELECT MAX(halaman_ke) AS max_halaman FROM soal");
+        $stmt = $this->mysqli->prepare("SELECT MAX(halaman_ke) AS max_halaman FROM soal");
         $stmt->execute();
         $res = $stmt->get_result();
         $data = $res->fetch_assoc();

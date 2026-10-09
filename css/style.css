@@ -1,38 +1,37 @@
 body {
-    font-family: Arial;
-    background-color: #f2f2f2;
+    background-color: lightyellow;
     margin: 0;
     padding: 30px;
 }
 
 .container {
-    width: 800px;
+    width: 70%;
     margin: auto;
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
+    background-color: lightcyan;
+    padding: 20px;
 }
 
 .nilai {
     text-align: center;
     margin-bottom: 30px;
+    
 }
 
 .soal {
-    border: 1px solid #ddd;
+    border: 1px solid black;
     padding: 20px;
     margin-bottom: 20px;
-    border-radius: 8px;
+    background-color: lightpink;
 }
 
 .btn {
+    text-align: center;
     display: block;
-    width: 150px;
-    margin: 30px auto 0;
+    width: 100px;
+    margin: 20px auto;
     padding: 10px;
     text-align: center;
+    color: black;
+    background-color: lightgreen;
     text-decoration: none;
-    background-color: #333;
-    color: white;
-    border-radius: 5px;
 }
